@@ -76,6 +76,15 @@ export function filesObs(fromDirPath: string) {
 // ============  Deletes a directory and subdirectories and emits an when completed =========
 // returns and Observable which emits null when the directory and all its subdirectories have been deleted or an error otherwise
 export function deleteDirObs(dirPath: string) {
-    return _dirPathObs(dirPath);
+    return _rimraf(dirPath);
+    // return _relaxedRimraf(dirPath);
 }
-const _dirPathObs = Observable.bindCallback(rimraf);
+const _rimraf = Observable.bindCallback(rimraf);
+
+// ============  Creates a directory and emits an when completed =========
+// returns and Observable which emits the name of the directory when the directory has been created or an error otherwise
+export function makeDirObs(dirPath: string) {
+    return _mkdirp(dirPath);
+}
+const _mkdirp = Observable.bindNodeCallback(mkdirp);
+

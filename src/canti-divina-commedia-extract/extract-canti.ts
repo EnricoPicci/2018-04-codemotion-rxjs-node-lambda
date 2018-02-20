@@ -1,9 +1,12 @@
 
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/observable/from';
 
 import {readLinesObs, writeFileObs} from '../fs-observables/fs-observables';
-import { Observable } from 'rxjs/Observable';
+
+import {Cantica, Canto} from '../canti-divina-commedia-model/canti-divina-commedia-model';
 
 export function extractCanti(divinaCommediaText: string): Observable<Array<Canto>> {
     return readLinesObs(divinaCommediaText)
@@ -40,16 +43,6 @@ export function isFirstLineOfCanto(line: string) {
     return line.indexOf('CANTO') > -1;
 }
 
-interface Cantica {
-    name: string;
-    canti: Array<Canto>
-}
-interface Canto {
-    name: string;
-    content: Array<string>;
-    sequence: number
-}
-
 export function writeAllCanti(divinaCommediaTextFileName: string, outputDir: string) {
     const lastCharOfDirName = outputDir[outputDir.length - 1];
     const dirNameWithSlash = lastCharOfDirName === '/' ? outputDir : outputDir + '/';
@@ -71,6 +64,7 @@ function writeCanto(title: string, content: Array<string>, outputDir: string) {
     const fileName = outputDir + title + '.txt';
     return writeFileObs(fileName, content);
 }
+
 export function cantiche(allCanti: Array<Canto>) {
     const cantiche = Array<Cantica>();
     cantiche.push(inferno(allCanti));

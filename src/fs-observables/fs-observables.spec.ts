@@ -2,7 +2,7 @@
 import 'mocha';
 import * as rimraf from 'rimraf';
 
-import {readLinesObs, writeFileObs, filesObs} from './fs-observables';
+import {readLinesObs, writeFileObs, filesObs, makeDirObs, deleteDirObs} from './fs-observables';
 
 describe('readLinesObs function', () => {
     
@@ -38,7 +38,7 @@ describe('writeFileObs function', () => {
         ];
         // delete the target directory if it exists
         rimraf(filePathDir, err => {
-            if (err && err.name !== 'ENOENT') {
+            if (err) {
                 console.error('code', err.name);
                 console.error('err', err);
                 return done(err);
@@ -67,3 +67,56 @@ describe('writeFileObs function', () => {
 
 });
 
+describe('makeDirObs function', () => {
+    
+    it('tries to create a directory - at the end it deletes the directory', done => {
+        const dirName = 'new dir';
+        makeDirObs(dirName).subscribe(
+            data => {
+                const expectedData = process.cwd() + '/' + dirName;
+                if (data !== expectedData) {
+                    console.error('expectedData', expectedData);
+                    console.error('data', data);
+                    return done(new Error('data not as expected '));
+                }
+            },
+            err => console.error(err), 
+            () => {
+                deleteDirObs(dirName).subscribe();
+                done();
+            }
+        );
+    });
+
+    it('tries to create a directory first and then the same directory - at the end it deletes the directory', done => {
+        const dirName = 'another new dir';
+        makeDirObs(dirName)
+        .switchMap(data => {
+            const expectedData = process.cwd() + '/' + dirName;
+            if (data !== expectedData) {
+                console.error('expectedData', expectedData);
+                console.error('data', data);
+                throw Error('data not as expected ');
+            }
+            return makeDirObs(dirName);
+        })
+        .subscribe(
+            data => {
+                if (data) {
+                    console.error('expectedData', null);
+                    console.error('data', data);
+                    throw Error('data not as expected ');
+                }
+            },
+            err => {
+                deleteDirObs(dirName).subscribe();
+                done(err);
+            }, 
+            () => {
+                deleteDirObs(dirName).subscribe();
+                done();
+            }
+        );
+    });
+
+});

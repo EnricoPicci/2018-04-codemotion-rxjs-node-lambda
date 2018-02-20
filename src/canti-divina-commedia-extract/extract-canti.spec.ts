@@ -5,8 +5,7 @@ import * as rimraf from 'rimraf';
 
 import {isFirstLineOfCanto, extractCanti, writeAllCanti} from './extract-canti';
 
-const divinaCommediaTextFileName = './src/extract-canti-divina-commedia/la_divin.txt';
-
+import {config} from '../config';
 
 describe('isFirstLineOfCanto function', () => {
     
@@ -25,7 +24,7 @@ describe('isFirstLineOfCanto function', () => {
 describe('extractCanti function', () => {
     
     it('reads the Divina Commedia text and splits it in Canti', done => {
-        extractCanti(divinaCommediaTextFileName)
+        extractCanti(config.divinaCommediaTextSource)
             .subscribe(
                 canti => {
                     if (canti.length !== 100) {
@@ -67,16 +66,16 @@ describe('extractCanti function', () => {
 describe('writeAllCanti function', () => {
     
     it('writes all canti as separate files', done => {
-        const outputDir = 'canti divina commedia/';
+        const outputDir = config.divinaCommediaCantiDir;
         // delete the target directory if it exists
         rimraf(outputDir, err => {
-            if (err && err.name !== 'ENOENT') {
+            if (err) {
                 console.error('code', err.name);
                 console.error('err', err);
                 return done(err);
             }
             let cantiCounter = 0;
-            writeAllCanti(divinaCommediaTextFileName, outputDir)
+            writeAllCanti(config.divinaCommediaTextSource, outputDir)
                 .subscribe(
                     _cantoTitle => cantiCounter++,
                     err => console.error(err),
