@@ -73,7 +73,7 @@ export function filesObs(fromDirPath: string) {
             .switchMap(files => Observable.from(files));
 }
 
-// ============  Deletes a directory and subdirectories and emits an when completed =========
+// ============  Deletes a directory and subdirectories and emits when completed =========
 // returns and Observable which emits null when the directory and all its subdirectories have been deleted or an error otherwise
 export function deleteDirObs(dirPath: string) {
     return _rimraf(dirPath);
@@ -81,10 +81,34 @@ export function deleteDirObs(dirPath: string) {
 }
 const _rimraf = Observable.bindCallback(rimraf);
 
-// ============  Creates a directory and emits an when completed =========
+// ============  Creates a directory and emits when completed =========
 // returns and Observable which emits the name of the directory when the directory has been created or an error otherwise
 export function makeDirObs(dirPath: string) {
     return _mkdirp(dirPath);
 }
 const _mkdirp = Observable.bindNodeCallback(mkdirp);
 
+
+// ============  Appends a line to a file and emits when completed =========
+// returns and Observable which emits the line appended when the line has been appended or an error otherwise
+export function appendFileObs(filePath: string, line: string) {
+    return _appendFile(filePath, line);
+}
+function appendFileNode(filePath: string, line: string, cb: (err, data: string) => void) {
+    return fs.appendFile(filePath, line, err => {
+        cb(err, line);
+    });
+}
+const _appendFile = Observable.bindNodeCallback(appendFileNode);
+
+// ============  Deletes a file and emits when completed =========
+// returns and Observable which emits the name of the file when the line has been deleted or an error otherwise
+export function deleteFileObs(filePath: string) {
+    return _deleteFile(filePath);
+}
+function deleteFileNode(filePath: string, cb: (err, data: string) => void) {
+    return fs.unlink(filePath, err => {
+        cb(err, filePath);
+    });
+}
+const _deleteFile = Observable.bindNodeCallback(deleteFileNode);

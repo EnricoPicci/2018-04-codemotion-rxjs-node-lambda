@@ -22,8 +22,10 @@ describe('readTransformWriteCanti function', () => {
                     files => numberOfTransformedFiles = files.length,
                     err => done(err),
                     () => {
-                        if (numberOfTransformedFiles !== numberOfSourceFiles) {
-                            console.error('number of transformed files ' + numberOfTransformedFiles + ' not equal to number of source files '+ numberOfSourceFiles);
+                        // adds the log file to the number of expected files
+                        const expectedWrittenFiles = numberOfSourceFiles + 1;
+                        if (numberOfTransformedFiles !== expectedWrittenFiles) {
+                            console.error('number of transformed files ' + numberOfTransformedFiles + ' not equal to the expected number files '+ expectedWrittenFiles);
                             done(new Error('readTransformWriteCanti failed'));
                         } else {
                             done();

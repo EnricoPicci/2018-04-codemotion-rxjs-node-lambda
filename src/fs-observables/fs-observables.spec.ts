@@ -1,8 +1,14 @@
 
+
 import 'mocha';
 import * as rimraf from 'rimraf';
+import * as _ from 'lodash';
+
+import 'rxjs/add/operator/do';
 
 import {readLinesObs, writeFileObs, filesObs, makeDirObs, deleteDirObs} from './fs-observables';
+import {appendFileObs} from './fs-observables';
+import {deleteFileObs} from './fs-observables';
 
 describe('readLinesObs function', () => {
     
@@ -44,9 +50,19 @@ describe('writeFileObs function', () => {
                 return done(err);
             }
             const fullFileName = filePathDir + fileName;
-            // writes the file and then checks, via filesObs function, that a file with the expected name exists
+            // writes the file and then runs the checks 
             writeFileObs(fullFileName, content)
+                // checks that the file name is emitted
+                .do(data => {
+                    if (fullFileName !== data) {
+                        console.error('data emitted', data);
+                        console.error('fullFileName', fullFileName);
+                        return done(new Error('data emitted by write failed'));
+                        // throw 'data emitted by write failed';
+                    }
+                })
                 .switchMap(_filePath => filesObs(filePathDir))
+                // checks, via filesObs function, that a file with the expected name exists
                 .subscribe(filePath => {
                     if (filePath !== fullFileName) {
                         console.error('filePath', filePath);
@@ -117,6 +133,45 @@ describe('makeDirObs function', () => {
                 done();
             }
         );
+    });
+
+});
+
+
+describe('appendFileObs function', () => {
+    
+    it('appends 2 lines to a file', done => {
+        const logFile = 'log.txt';
+        const line = 'I am a line';
+        const linePlusReturn = line + '\n';
+        appendFileObs(logFile, linePlusReturn)
+        .switchMap(data => {
+            // removes the last char which is carriage return - this should be the line appended
+            const lineEmitted = data.substr(0, data.length - 1);
+            return appendFileObs(logFile, lineEmitted);
+        })
+        .subscribe(
+            undefined,
+            err => {
+                console.error('ERROR', err);
+                done(err);
+            },
+            () => {
+                readLinesObs(logFile)
+                .subscribe(lines => {
+                    const linesExpected =[line, line];
+                    const areLinesCorrect = _.isEqual(lines, linesExpected);
+                    if (!areLinesCorrect) {
+                        console.error('lines logged:', lines);
+                        console.error('lines expected:', linesExpected);
+                        return done(new Error('appends 2 lines to a file failed'));
+                    }
+                    deleteFileObs(logFile).subscribe();
+                    done();
+                })
+            }
+        );
+
     });
 
 });

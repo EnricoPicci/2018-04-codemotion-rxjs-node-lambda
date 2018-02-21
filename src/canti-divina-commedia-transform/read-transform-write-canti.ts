@@ -8,12 +8,15 @@ import 'rxjs/add/operator/map';
 import {fileListObs} from '../fs-observables/fs-observables';
 import {readLinesObs} from '../fs-observables/fs-observables';
 import {writeFileObs} from '../fs-observables/fs-observables';
+import {appendFileObs} from '../fs-observables/fs-observables';
 
 import {transformCanto} from './transform-canto';
 import {config} from '../config';
 
-export function readTransformWriteCanti() {
-    return fileListObs(config.divinaCommediaCantiDir)
+export function readTransformWriteCanti(inputDir?: string) {
+    const sourceDir = inputDir ? inputDir : config.divinaCommediaCantiDir;
+    const logFile = config.divinaCommediaCantiTransformedDir + 'log.txt';
+    return fileListObs(sourceDir)
             .switchMap(cantiFileNames => Observable.from(cantiFileNames))
             .mergeMap(cantoFileName => readLinesObs(cantoFileName)
                                         .map(cantoLines => {
@@ -21,5 +24,6 @@ export function readTransformWriteCanti() {
                                         })
             )
             .map(canto => transformCanto(canto, config.divinaCommediaCantiTransformedDir))
-            .mergeMap(cantoTranformed => writeFileObs(cantoTranformed.name, cantoTranformed.content));
+            .mergeMap(cantoTranformed => writeFileObs(cantoTranformed.name, cantoTranformed.content))
+            .mergeMap(fileWritten => appendFileObs(logFile, fileWritten + '\n'));
 }
