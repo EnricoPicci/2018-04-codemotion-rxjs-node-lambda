@@ -13,10 +13,11 @@
   //   "./node_modules/@types/node/index.d.ts"
   // ],
   "include": [
-    "src/**/*.ts"
+    "transform/src/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "transform/node_modules"
   ],
   "typeRoots": [
     "node_modules/@types"

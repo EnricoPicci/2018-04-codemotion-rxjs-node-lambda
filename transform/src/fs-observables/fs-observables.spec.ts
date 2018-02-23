@@ -13,7 +13,7 @@ import {deleteFileObs} from './fs-observables';
 describe('readLinesObs function', () => {
     
     it('reads all the lines of a file', done => {
-        const filePath = 'src/fs-observables/fs-observable-test-dir/dir-2/file-2-1.txt';
+        const filePath = 'transform/src/fs-observables/fs-observable-test-dir/dir-2/file-2-1.txt';
         readLinesObs(filePath).subscribe(
             lines => {
                 console.log('lines', lines);
@@ -36,7 +36,7 @@ describe('readLinesObs function', () => {
 describe('writeFileObs function', () => {
     
     it('writes a file with a certain content', done => {
-        const filePathDir = 'src/fs-observables/fs-observable-test-dir-output/';
+        const filePathDir = 'transform/src/fs-observables/fs-observable-test-dir-output/';
         const fileName = 'file-w.txt';
         const content = [
             'first line',

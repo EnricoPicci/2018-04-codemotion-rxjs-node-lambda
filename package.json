@@ -4,30 +4,27 @@
   "description": "node express",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register src/**/*.spec.ts src/**/**/*.spec.ts",
+    "test": "mocha -r ts-node/register transform/src/**/*.spec.ts src/**/**/*.spec.ts",
     "tsc": "tsc"
   },
   "author": "Enrico",
   "license": "ISC",
   "private": true,
-  "dependencies": {
-    "lodash": "^4.17.4",
-    "mkdirp": "^0.5.1",
-    "node-dir": "^0.1.17",
-    "rimraf": "^2.6.2",
-    "rxjs": "^5.5.2"
-  },
   "devDependencies": {
+    "@types/aws-lambda": "0.0.32",
+    "@types/aws-sdk": "^2.7.0",
     "@types/chai": "^4.0.4",
     "@types/lodash": "^4.14.80",
     "@types/mkdirp": "^0.5.1",
     "@types/mocha": "^2.2.44",
-    "@types/node": "^8.0.47",
+    "@types/node": "^8.9.4",
     "@types/node-dir": "0.0.32",
     "@types/request": "^2.0.7",
     "@types/rimraf": "^2.0.2",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
+    "serverless-plugin-typescript": "^1.1.5",
+    "serverless-webpack": "^4.3.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3"
   }
