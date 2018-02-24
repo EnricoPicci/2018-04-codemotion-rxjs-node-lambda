@@ -1,3 +1,4 @@
+import * as stream from 'stream';
 
 import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/observable/bindCallback';
@@ -6,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
 import AWS = require('aws-sdk');
-import { GetObjectRequest, GetObjectOutput, ListObjectsRequest, ListObjectsOutput } from 'aws-sdk/clients/s3';
+import { GetObjectRequest, GetObjectOutput, ListObjectsRequest, ListObjectsOutput, PutObjectRequest, PutObjectOutput } from 'aws-sdk/clients/s3';
 import { AWSError } from 'aws-sdk/lib/error';
 
 const s3 = new AWS.S3();
@@ -25,13 +26,9 @@ function _getObject(bucket: string, key: string, cb: (err: AWSError, result: Get
     return s3.getObject(request, cb);
 }
 
-
-
 export function fileListObs(bucket: string) {
     return _fileListObs(bucket)
-            .do(data => console.log('data 1', data))
             .map(data => data.Contents)
-            .do(data => console.log('data 2', data))
             .map(data => data.map(objInfo => objInfo.Key));
 }
 const _fileListObs = Observable.bindNodeCallback(_fileList);
@@ -40,4 +37,22 @@ function _fileList(bucket: string, cb: (err: AWSError, result: ListObjectsOutput
         Bucket: bucket
     };
     return s3.listObjects(request, cb);
+}
+
+export function writeFileObs(bucket: string, fileName: string, lines: Array<string>) {
+    return _writeFileObs(bucket, fileName, lines)
+            .map(data => fileName);
+}
+const _writeFileObs = Observable.bindNodeCallback(_writeFile);
+function _writeFile(bucket: string, fileName: string, lines: Array<string>, cb: (err: AWSError, result: PutObjectOutput) => void) {
+    const linesStream = new stream.Readable({objectMode: true})
+    console.log('file name', fileName);
+    const fileContent = lines.join('\n');
+    console.log('fileContent', fileContent);
+    const request: PutObjectRequest = {
+        Bucket: bucket,
+        Key: fileName,
+        Body: fileContent
+    };
+    return s3.putObject(request, cb);
 }

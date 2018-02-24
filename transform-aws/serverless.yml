@@ -69,6 +69,18 @@ functions:
       - http:
           path: listFilesOfOneBucket/get
           method: get
+  readAndWriteOneFile:
+    handler: handler.readAndWriteOneFile
+    events:
+      - http:
+          path: readAndWriteOneFile/get
+          method: get
+  transform:
+    handler: handler.transform
+    events:
+      - http:
+          path: transform/get
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

@@ -1,7 +1,10 @@
 import { APIGatewayEvent, Context, Handler, Callback } from 'aws-lambda';
 
 import {readLinesTest} from './src/test-services';
-import {fileListTest} from './src/test-services'
+import {fileListTest} from './src/test-services';
+import {writeFileTest} from './src/test-services';
+import {transformTest} from './src/test-services';
+
 // import {FunctionProcessingError} from './src/function-processing-error';
 
 export const readLinesOfOneFile = (event, context, callback) => {
@@ -48,6 +51,50 @@ export const listFilesOfOneBucket = (event, context, callback) => {
   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
+export const readAndWriteOneFile = (event, context, callback) => {
+  let message: any;
+  writeFileTest()
+  .subscribe(
+    data => message = data,
+    err => console.error('readAndWriteOneFile error', err),
+    () => {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Go Serverless v1.0! I test readAndWriteOneFile function',
+          data: message,
+        }),
+      };
+      callback(null, response);
+    }
+  );
+
+  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
+  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+};
+
+
+export const transform = (event, context, callback) => {
+  const transformedFiles = new Array<string>();
+  transformTest()
+  .subscribe(
+    data => transformedFiles.push(data),
+    err => console.error('transform error', err),
+    () => {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Go Serverless v1.0! I test transform function',
+          data: transformedFiles,
+        }),
+      };
+      callback(null, response);
+    }
+  );
+
+  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
+  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+};
 
 // export const addUser: Handler = (event : APIGatewayEvent, context : Context, callback : Callback) => {
 //   const data = JSON.parse(event.body);
