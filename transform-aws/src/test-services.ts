@@ -6,6 +6,8 @@ import {fileListObs} from './aws-s3-observable';
 import {writeFileObs} from './aws-s3-observable';
 
 import {readTransformWriteCanti} from './transform';
+import {readTransformWriteCantiBlocks} from './transform';
+
 
 const testReadBucketName = 'transform-aws-dev-uploadbucket-1goif1vteiz8c';
 const testWriteBucketName = 'transform-aws-dev-write-bucket-1goif1vteiz8c';
@@ -33,4 +35,8 @@ export function writeFileTest() {
 export function transformTest() {
     console.log('transformTest start');
     return readTransformWriteCanti();
+}
+
+export function transformBlocksTest(blockSize: number) {
+    return readTransformWriteCantiBlocks(blockSize);
 }

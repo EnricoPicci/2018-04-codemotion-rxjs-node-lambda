@@ -81,6 +81,12 @@ functions:
       - http:
           path: transform/get
           method: get
+  transformBlocks:
+    handler: handler.transformBlocks
+    events:
+      - http:
+          path: transformBlocks/get
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

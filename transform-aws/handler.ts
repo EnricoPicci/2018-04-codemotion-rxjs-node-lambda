@@ -4,8 +4,8 @@ import {readLinesTest} from './src/test-services';
 import {fileListTest} from './src/test-services';
 import {writeFileTest} from './src/test-services';
 import {transformTest} from './src/test-services';
+import {transformBlocksTest} from './src/test-services';
 
-// import {FunctionProcessingError} from './src/function-processing-error';
 
 export const readLinesOfOneFile = (event, context, callback) => {
   let message: any;
@@ -24,9 +24,6 @@ export const readLinesOfOneFile = (event, context, callback) => {
       callback(null, response);
     }
   );
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
 export const listFilesOfOneBucket = (event, context, callback) => {
@@ -46,9 +43,6 @@ export const listFilesOfOneBucket = (event, context, callback) => {
       callback(null, response);
     }
   );
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
 export const readAndWriteOneFile = (event, context, callback) => {
@@ -68,9 +62,6 @@ export const readAndWriteOneFile = (event, context, callback) => {
       callback(null, response);
     }
   );
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
 
 
@@ -91,10 +82,33 @@ export const transform = (event, context, callback) => {
       callback(null, response);
     }
   );
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
 };
+
+
+export const transformBlocks = (event: APIGatewayEvent, context, callback) => {
+  const transformedFiles = new Array<string>();
+  const blockSize = parseInt(event.queryStringParameters.size);
+  const start = Date.now();
+  transformBlocksTest(blockSize)
+  .subscribe(
+    data => transformedFiles.push(data),
+    err => console.error('transformBlocks error', err),
+    () => {
+      const end = Date.now();
+      const duration = end - start;
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Go Serverless v1.0! I test transformBlocks function',
+          data: {duration, transformedFiles},
+        }),
+      };
+      callback(null, response);
+    }
+  );
+};
+
+
 
 // export const addUser: Handler = (event : APIGatewayEvent, context : Context, callback : Callback) => {
 //   const data = JSON.parse(event.body);
