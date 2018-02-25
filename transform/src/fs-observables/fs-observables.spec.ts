@@ -10,6 +10,31 @@ import {readLinesObs, writeFileObs, filesObs, makeDirObs, deleteDirObs} from './
 import {appendFileObs} from './fs-observables';
 import {deleteFileObs} from './fs-observables';
 
+
+describe('filesObs function', () => {
+    
+    it('reads the files of a directory', done => {
+        const files = new Array<string>();
+        const dirPath = 'transform/src/fs-observables/fs-observable-test-dir/';
+        filesObs(dirPath).subscribe(
+            file => files.push(file),
+            err => {
+                console.error('ERROR', err);
+            },
+            () => {
+                console.log('files', files);
+                if (files.length !== 3) {
+                    console.error(dirPath, files);
+                    return done(new Error('files count failed'));
+                }
+                return done();
+            }
+        );
+
+    });
+
+});
+
 describe('readLinesObs function', () => {
     
     it('reads all the lines of a file', done => {

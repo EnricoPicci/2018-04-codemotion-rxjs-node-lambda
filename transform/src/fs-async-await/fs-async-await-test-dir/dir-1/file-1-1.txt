@@ -1,0 +1,6 @@
+I am file 1 1
+
+FIRST SNIPPET
+Snippet start
+snippet line 1 1
+Snippet end

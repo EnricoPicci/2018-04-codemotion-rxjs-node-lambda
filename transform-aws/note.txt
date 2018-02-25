@@ -19,3 +19,6 @@ create a webpack.config.js file in the root directory
 
 in case the build fails with message "The webpack plugin could not find the configuration file at: .../.build/webpack.config.js
 just copy webpack.config.js in the .build directory
+
+
+https://zj2powjwlf.execute-api.us-east-1.amazonaws.com/dev/transformBlocks/get?size=10

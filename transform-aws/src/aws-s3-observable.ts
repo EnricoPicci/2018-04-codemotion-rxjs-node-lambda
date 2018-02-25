@@ -1,10 +1,7 @@
-import * as stream from 'stream';
 
 import { Observable } from 'rxjs/Observable';
-// import 'rxjs/add/observable/bindCallback';
 import 'rxjs/add/observable/bindNodeCallback';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
 
 import AWS = require('aws-sdk');
 import { GetObjectRequest, GetObjectOutput, ListObjectsRequest, ListObjectsOutput, PutObjectRequest, PutObjectOutput } from 'aws-sdk/clients/s3';
@@ -45,10 +42,8 @@ export function writeFileObs(bucket: string, fileName: string, lines: Array<stri
 }
 const _writeFileObs = Observable.bindNodeCallback(_writeFile);
 function _writeFile(bucket: string, fileName: string, lines: Array<string>, cb: (err: AWSError, result: PutObjectOutput) => void) {
-    const linesStream = new stream.Readable({objectMode: true})
     console.log('file name', fileName);
     const fileContent = lines.join('\n');
-    console.log('fileContent', fileContent);
     const request: PutObjectRequest = {
         Bucket: bucket,
         Key: fileName,

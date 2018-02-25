@@ -5,4 +5,5 @@ export const config = {
     divinaCommediaCantiTransformedDir: 'canti-divina-commedia-transformed/',
     divinaCommediaCantiTransformedDir1: 'canti-divina-commedia-transformed-1/',
     divinaCommediaCantiTransformedDirBlocks: 'canti-divina-commedia-transformed-blocks/',
+    divinaCommediaCantiTransformedDirAsyncAwait: 'canti-divina-commedia-transformed-async-await/',
 };

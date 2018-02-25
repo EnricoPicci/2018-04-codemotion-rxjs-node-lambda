@@ -77,7 +77,6 @@ export function filesObs(fromDirPath: string) {
 // returns and Observable which emits null when the directory and all its subdirectories have been deleted or an error otherwise
 export function deleteDirObs(dirPath: string) {
     return _rimraf(dirPath);
-    // return _relaxedRimraf(dirPath);
 }
 const _rimraf = Observable.bindCallback(rimraf);
 
