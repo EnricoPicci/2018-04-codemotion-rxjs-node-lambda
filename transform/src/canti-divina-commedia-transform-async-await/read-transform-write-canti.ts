@@ -19,10 +19,10 @@ export async function readTransformWriteCanti(inputDir?: string) {
 }
 
 export async function readTransformWriteCanto(filePath: string, sequence: number) {
-    const logFile = config.divinaCommediaCantiTransformedDirAsyncAwait + 'log.txt';
+    const targetDir = config.divinaCommediaCantiTransformedDirAsyncAwait;
+    const logFile = targetDir + 'log.txt';
     const cantoLines = await readLinesPromise(filePath);
-    const transformedCanto = transformCanto({name: filePath, content: cantoLines.lines, sequence},
-                                            config.divinaCommediaCantiTransformedDirAsyncAwait);
+    const transformedCanto = transformCanto({name: filePath, content: cantoLines.lines, sequence}, targetDir);
     const fileTransformed = await writeFilePromise(transformedCanto.name, transformedCanto.content);
     return appendFilePromise(logFile, fileTransformed);
 }
