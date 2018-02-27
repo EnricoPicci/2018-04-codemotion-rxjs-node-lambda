@@ -12,20 +12,21 @@
   "private": true,
   "devDependencies": {
     "@types/aws-lambda": "0.0.32",
-    "@types/aws-sdk": "^2.7.0",
     "@types/chai": "^4.0.4",
     "@types/lodash": "^4.14.80",
-    "@types/mkdirp": "^0.5.1",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.9.4",
-    "@types/node-dir": "0.0.32",
-    "@types/request": "^2.0.7",
-    "@types/rimraf": "^2.0.2",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
-    "serverless-plugin-typescript": "^1.1.5",
     "serverless-webpack": "^4.3.0",
+    "ts-loader": "3.5.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.3",
+    "webpack": "^3.11.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.200.0",
+    "lodash": "^4.17.4",
+    "rxjs": "^5.5.2"
   }
 }

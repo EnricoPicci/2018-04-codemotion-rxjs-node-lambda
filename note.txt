@@ -1,0 +1,23 @@
+
+Install webpack and serverless-webpack plugin
+    "npm install webpack --save-dev"
+    "npm install serverless-webpack --save-dev"
+    "npm install ts-loader --save-dev"  (currently the version supported of ts-loader is 3.5.0 and not the 4.x.x)
+
+in serverless.yml inser the following lines
+package:
+  individually: true
+plugins:
+  - serverless-webpack
+
+NOTE: the "serverless-webpack" plugin is not compatible with the "serverless-plugin-typescript" plugin
+
+
+
+create a webpack.config.js file in the root directory
+
+in case the build fails with message "The webpack plugin could not find the configuration file at: .../.build/webpack.config.js
+just copy webpack.config.js in the .build directory -- THIS SHOULD NOT HAPPEN IF YOU DO NOT HAVE "serverless-plugin-typescript" plugin
+
+
+https://zj2powjwlf.execute-api.us-east-1.amazonaws.com/dev/transformBlocks/get?size=10

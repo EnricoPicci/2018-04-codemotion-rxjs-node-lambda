@@ -5,6 +5,9 @@ canti-divina-commedia-transformed-blocks
 canti-divina-commedia-transformed-async-await
 canti-divina-commedia-transformed-async-await-block
 
+dist
+dist*
+
 # Logs
 logs
 *.log
