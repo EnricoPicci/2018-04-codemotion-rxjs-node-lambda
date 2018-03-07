@@ -6,6 +6,7 @@ import {fileListTest} from './src/test-services';
 import {writeFileTest} from './src/test-services';
 import {transformTest} from './src/test-services';
 import {transformBlocksTest} from './src/test-services';
+import {transformConcurrencyTest} from './src/test-services';
 
 
 export const readLinesOfOneFile = (_event, _context, callback: Callback) => {
@@ -110,33 +111,29 @@ export const transformBlocks = (event: APIGatewayEvent, _context, callback: Call
 };
 
 
-
-// export const addUser: Handler = (event : APIGatewayEvent, context : Context, callback : Callback) => {
-//   const data = JSON.parse(event.body);
-//   const result = addUserImpl(data);
-//   const isError = result instanceof FunctionProcessingError;
-//   let response;
-//   if (isError) {
-//     response = {
-//       statusCode: 499,
-//       body: JSON.stringify({
-//         message: 'ERROR Serverless' + '\n' + result.message,
-//         input: event,
-//       }),
-//     };
-//   } else {
-//     response = {
-//       statusCode: 200,
-//       body: JSON.stringify({
-//         message: 'Serverless addUser function - completed successfully',
-//         result,
-//       }),
-//     };
-//   }
-
-
-//   callback(null, response);
-
-//   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-//   // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
-// };
+export const transformConcurrency = (event: APIGatewayEvent, _context, callback: Callback) => {
+  const transformedFiles = new Array<string>();
+  let concurrencyLevel: number;
+  if (event.queryStringParameters) {
+    concurrencyLevel = parseInt(event.queryStringParameters.concurrencylevel);
+  }
+  console.log('concurrencyLevel', concurrencyLevel);
+  const start = Date.now();
+  transformConcurrencyTest(concurrencyLevel)
+  .subscribe(
+    data => transformedFiles.push(data),
+    err => console.error('transformConcurrency error', err),
+    () => {
+      const end = Date.now();
+      const duration = end - start;
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Go Serverless v1.0! I test transformConcurrency function',
+          data: {duration, transformedFiles},
+        }),
+      };
+      callback(null, response);
+    }
+  );
+};

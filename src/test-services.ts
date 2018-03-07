@@ -7,6 +7,7 @@ import {writeFileObs} from './aws-s3-observable';
 
 import {readTransformWriteCanti} from './transform';
 import {readTransformWriteCantiBlocks} from './transform';
+import {readTransformWriteCantiConcurrency} from './transform';
 
 
 const testReadBucketName = 'transform-aws-dev-uploadbucket-1goif1vteiz8c';
@@ -40,3 +41,8 @@ export function transformTest() {
 export function transformBlocksTest(blockSize: number) {
     return readTransformWriteCantiBlocks(blockSize);
 }
+
+export function transformConcurrencyTest(concurrencyLevel?: number) {
+    return readTransformWriteCantiConcurrency(concurrencyLevel);
+}
+

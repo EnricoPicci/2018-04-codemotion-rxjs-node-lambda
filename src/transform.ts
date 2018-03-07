@@ -5,6 +5,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/bufferCount';
 import 'rxjs/add/operator/concatMap';
+import 'rxjs/add/operator/do';
 
 import * as _ from 'lodash';
 
@@ -17,6 +18,24 @@ import {config} from './config';
 const readBucket = config.divinaCommediaCantiSourceBucket;
 const writeBucket = config.divinaCommediaCantiTransformedWriteBucket;;
 
+// https://zj2powjwlf.execute-api.us-east-1.amazonaws.com/dev/transformConcurrency/get?concurrencyLevel=10
+export function readTransformWriteCantiConcurrency(concurrencyLevel?: number) {
+    console.log('readTransformWriteCantiConcurrency start');
+    return fileListObs(readBucket)
+            .switchMap(cantiFileNames => Observable.from(cantiFileNames))
+            .mergeMap(fileName => readTransformWriteCantoFromFile(fileName), concurrencyLevel);
+}
+
+function readTransformWriteCantoFromFile(cantoFileName: string) {
+    return readLinesObs(readBucket, cantoFileName)
+            .map(cantoLines => {
+                return {name: cantoFileName, content: cantoLines};
+            })
+            .map(canto => transformCantoLines(canto.name, canto.content))
+            .mergeMap(transformedCanto => writeFileObs(writeBucket, transformedCanto.name, transformedCanto.content));
+}
+
+// https://zj2powjwlf.execute-api.us-east-1.amazonaws.com/dev/transformBlocks/get?size=10
 export function readTransformWriteCantiBlocks(blockSize: number) {
     console.log('readTransformWriteCantiBlocks start');
     return fileListObs(readBucket)
@@ -25,7 +44,7 @@ export function readTransformWriteCantiBlocks(blockSize: number) {
             .concatMap(fileNamesBlock => readTransformWriteCantiFromFiles(fileNamesBlock));
 }
 
-export function readTransformWriteCantiFromFiles(cantiFileNames: Array<string>) {
+function readTransformWriteCantiFromFiles(cantiFileNames: Array<string>) {
     return Observable.from(cantiFileNames)
             .mergeMap(cantoFileName => readLinesObs(readBucket, cantoFileName)
                                         .map(cantoLines => {

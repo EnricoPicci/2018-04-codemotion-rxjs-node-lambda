@@ -5,6 +5,10 @@ canti-divina-commedia-transformed-blocks
 canti-divina-commedia-transformed-async-await
 canti-divina-commedia-transformed-async-await-block
 
+.DS_Store
+
+.serverless
+
 dist
 dist*
 

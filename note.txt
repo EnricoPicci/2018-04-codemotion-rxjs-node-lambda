@@ -4,7 +4,7 @@ Install webpack and serverless-webpack plugin
     "npm install serverless-webpack --save-dev"
     "npm install ts-loader --save-dev"  (currently the version supported of ts-loader is 3.5.0 and not the 4.x.x)
 
-in serverless.yml inser the following lines
+in serverless.yml insert the following lines
 package:
   individually: true
 plugins:
@@ -15,6 +15,8 @@ NOTE: the "serverless-webpack" plugin is not compatible with the "serverless-plu
 
 
 create a webpack.config.js file in the root directory
+
+build and deploy with the command "serverless deploy"
 
 in case the build fails with message "The webpack plugin could not find the configuration file at: .../.build/webpack.config.js
 just copy webpack.config.js in the .build directory -- THIS SHOULD NOT HAPPEN IF YOU DO NOT HAVE "serverless-plugin-typescript" plugin
